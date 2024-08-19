@@ -11,13 +11,24 @@ export default function ticketReducer(state, action) {
         editingTicket: null,
       };
     case "DELETE_TICKET":
-      return {
-        ...state,
-        tickets: state.tickets.filter(
-          (ticket) => ticket.id !== action.payload.id
-        ),
-        editingTicket: null,
-      };
+      // You are deleting the ticket you are currently editing
+      if (state.editingTicket && state.editingTicket.id === action.payload.id) {
+        return {
+          ...state,
+          tickets: state.tickets.filter(
+            (ticket) => ticket.id !== action.payload.id
+          ),
+          editingTicket: null,
+        };
+      } else {
+        // You are deleting another ticket then the one you are editing
+        return {
+          ...state,
+          tickets: state.tickets.filter(
+            (ticket) => ticket.id !== action.payload.id
+          ),
+        };
+      }
     case "SET_EDITING_TICKET":
       return {
         ...state,
@@ -27,6 +38,11 @@ export default function ticketReducer(state, action) {
       return {
         ...state,
         editingTicket: null,
+      };
+    case "SET_SORTING":
+      return {
+        ...state,
+        sortPreference: action.payload,
       };
     default:
       return state;

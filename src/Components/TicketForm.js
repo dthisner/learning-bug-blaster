@@ -11,6 +11,12 @@ export default function TicketForm({ dispatch, editingTicket }) {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(priorityLabels[1]);
 
+  const clearForm = () => {
+    setTitle("");
+    setDescription("");
+    setPriority(priorityLabels[1]);
+  };
+
   useEffect(() => {
     if (editingTicket) {
       setTitle(editingTicket.title);
@@ -20,12 +26,6 @@ export default function TicketForm({ dispatch, editingTicket }) {
       clearForm();
     }
   }, [editingTicket]);
-
-  const clearForm = () => {
-    setTitle("");
-    setDescription("");
-    setPriority(priorityLabels[1]);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -42,6 +42,11 @@ export default function TicketForm({ dispatch, editingTicket }) {
       payload: ticketData,
     });
 
+    clearForm();
+  };
+
+  const handleCancelEdit = () => {
+    dispatch({ type: "CLEAR_EDITING_TICKET" });
     clearForm();
   };
 
@@ -83,6 +88,11 @@ export default function TicketForm({ dispatch, editingTicket }) {
       <button type="submit" className="button">
         Submit
       </button>
+      {editingTicket && (
+        <button onClick={handleCancelEdit} className="button">
+          Cancel Edit
+        </button>
+      )}
     </form>
   );
 }
